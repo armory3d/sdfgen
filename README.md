@@ -1,5 +1,7 @@
 # sdfgen
 
+![](viewer/sdf.jpg)
+
 Stand-alone GPU-based signed distance field generator from 3D triangle meshes. Used in Armory, written in Haxe and Kha.
 
 ## Run
@@ -37,11 +39,11 @@ cd sdfgen/viewer/bin
 ./run_linux.sh
 ```
 
-An included `mesh.obj' file:
+An included `mesh.obj` file:
 
 ![](viewer/a.png)
 
-Will currently result in this:
+Currently results into this:
 
 ![](viewer/b.png)
 
