@@ -3,6 +3,8 @@ package;
 class Main {
 
 	static var meshtex:kha.Image;
+	// static var meshuvtex:kha.Image;
+	// static var basetex:kha.Image;
 	static var numverts = 0;
 
 	public static function main() {
@@ -23,10 +25,14 @@ class Main {
 		iron.data.Data.getBlob(path, function(md:kha.Blob) {
 			var obj = new ObjLoader(md.toString());
 			var pa = obj.indexedVertices;
+			// var uva = obj.indexedUVs;
 			var ia = obj.indices;
 
 		// iron.data.Data.getMesh("mesh", "", null, function(md:iron.data.MeshData) {
+		// iron.data.Data.getImage("mesh.png", function(image:kha.Image) {
+			// basetex = image;
 			// var pa = md.geom.positions;
+			// var uva = md.geom.uvs;
 			// var ia = md.geom.indices[0]; // No multi-mat
 
 			numverts = ia.length;
@@ -36,29 +42,43 @@ class Main {
 			var h = Std.int(numverts / stride) + 1;
 
 			var o = new haxe.io.BytesOutput();
+			// var ouv = new haxe.io.BytesOutput();
 
 			for (i in 0...numverts) {
 				o.writeFloat(pa[ia[i] * 3]);
 				o.writeFloat(pa[ia[i] * 3 + 1]);
 				o.writeFloat(pa[ia[i] * 3 + 2]);
 				o.writeFloat(0.0);
+				// ouv.writeFloat(uva[ia[i] * 2]);
+				// ouv.writeFloat(uva[ia[i] * 2 + 1]);
+				// ouv.writeFloat(0.0);
+				// ouv.writeFloat(0.0);
 			}
 			// Finish line
 			for (i in numverts...w * h * 4) {
 				o.writeFloat(0.0);
+				// ouv.writeFloat(0.0);
 			}
 
 			meshtex = kha.Image.fromBytes(o.getBytes(), w, h, kha.graphics4.TextureFormat.RGBA64, kha.graphics4.Usage.StaticUsage);
+			// meshuvtex = kha.Image.fromBytes(ouv.getBytes(), w, h, kha.graphics4.TextureFormat.RGBA64, kha.graphics4.Usage.StaticUsage);
 
 			iron.object.Uniforms.externalTextureLinks = [externalTextureLink];
 			iron.object.Uniforms.externalIntLinks = [externalIntLink];
 		});
+		// });
 	}
 
 	static function externalTextureLink(tulink:String):kha.Image {
 		if (tulink == "_meshtex") {
 			return meshtex;
 		}
+		// if (tulink == "_meshuvtex") {
+			// return meshuvtex;
+		// }
+		// if (tulink == "_basetex") {
+			// return basetex;
+		// }
 		return null;
 	}
 

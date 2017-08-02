@@ -1,6 +1,8 @@
 #version 450
 
 uniform sampler2D meshtex;
+// uniform sampler2D meshuvtex;
+// uniform sampler2D basetex;
 uniform int meshverts;
 
 in vec2 texCoord;
@@ -67,14 +69,15 @@ ivec2 getco(const int i) {
 
 void main() {
 
-	// 0:1 x 0:1 -> 0:res2 x 0:res
-	vec2 co = texCoord * vec2(res2, res);
+	// 0:1 x 0:1 -> 0:res x 0:res2
+	vec2 co = texCoord * vec2(res, res2);
 	// -> 0:res x 0:res x 0:res
-	vec3 pos = vec3(int(co.x) % int(res), int(co.y) % int(res), int(co.x / res) + int(co.y / res) * res);
+	vec3 pos = vec3(int(co.x) % int(res), int(co.y) % int(res), int(co.x / res) * res + int(co.y / res));
 	// -> -1:1 x -1:1 x -1:1
 	pos = (pos / res) * 2.0 - 1.0;
 
 	float dist = 10000.0;
+    vec3 col = vec3(0.0);
 	int hits = 0;
 	const vec3 ray = vec3(1.0, 0.0, 0.0);
 	for (int i = 0; i < meshverts; i += 3) {
@@ -84,11 +87,30 @@ void main() {
 		float d = udTriangle(pos, a, b, c);
 		dist = min(dist, d);
 		hits += hitTriangle(pos, ray, a, b, c);
+
+        // Found closer surface
+        // if (d == dist) {
+            // TODO: interpolate UV
+            // vec2 uva = texelFetch(meshuvtex, getco(i), 0).rg;
+            // vec2 uvb = texelFetch(meshuvtex, getco(i + 1), 0).rg;
+            // vec2 uvc = texelFetch(meshuvtex, getco(i + 2), 0).rg;
+
+            // float minx = min(a.x, min(b.x, c.x));
+            // float maxx = max(a.x, max(b.x, c.x));
+            // float miny = min(a.y, min(b.y, c.y));
+            // float maxy = max(a.y, max(b.y, c.y));
+            // float minz = min(a.z, min(b.z, c.z));
+            // float maxz = max(a.z, max(b.z, c.z));
+
+            // col = texture(basetex, uva).rgb;
+        // }
 	}
 
 	// int inside = hits % 2 == 0 ? 1 : -1;
     // float distout = abs(dist) * inside;
     float distout = abs(dist);
 
+    // fragColor.rgb = col;
+    // fragColor.a = distout;
     fragColor.r = distout;
 }
