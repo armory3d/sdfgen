@@ -21,8 +21,8 @@ int steps;
 float sliceView(const int slice) {
 	ivec2 co;
 	const float step = 1 / res;
-	co.x = int(texCoord.x * res + slice * res);
-	co.y = int(texCoord.y * res);
+	co.x = int(texCoord.x * res);
+	co.y = int(texCoord.y * res + slice * res);
 	return texelFetch(sdftex, co, 0).r;
 }
 
@@ -44,7 +44,7 @@ float rayMarch() {
 		float s = s2 - s1;
 		
 		float m = sign(rd.z) > 0.0 ? s : (1.0 - s);
-		vec2 co = vec2(p.x / res + s2 / res, p.y);
+		vec2 co = vec2(p.x, p.y / res + s2 / res);
 		float dist = (texture(sdftex, co).r) * m;
 		
 		co.x += 1 / res * sign(rd.z);

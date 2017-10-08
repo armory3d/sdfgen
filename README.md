@@ -6,7 +6,7 @@ Stand-alone GPU-based signed distance field generator from 3D triangle meshes. U
 
 ## Run
 
-Takes `mesh.obj` file and outputs raw 50x50x50 volume of floats into `out.bin`. This volume can be loaded into a 3D texture using R32/R16 format.
+Takes `mesh.obj` file and outputs raw 50x50x50 (50x2500) volume of floats into `out.bin`. This volume can be loaded into a 3D texture using R32/R16 format.
 
 ```
 git clone https://github.com/armory3d/sdfgen
